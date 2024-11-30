@@ -1,7 +1,6 @@
 {
-    "entryFile": "index.ts",
     "noImplicitAdditionalProperties": "throw-on-extras",
-    "controllerPathGlobs": ["src/**/*.route.ts"],
+    "controllerPathGlobs": ["*/src/routes.ts"],
     "spec": {
         "outputDirectory": "build",
         "specVersion": 3,

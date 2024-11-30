@@ -1,11 +1,10 @@
 import { afterEach, beforeEach } from 'vitest'
 import server from '../server'
-import { type AppBookDatabaseState } from '../books/src/database_access'
-import { type AppWarehouseDatabaseState } from '../warehouse/src/warehouse_database'
+import { type AppBookDatabaseState } from '../src/database_access'
 
 export interface ServerTestContext {
   address: string
-  state: AppBookDatabaseState & AppWarehouseDatabaseState
+  state: AppBookDatabaseState
   closeServer: () => void
 }
 

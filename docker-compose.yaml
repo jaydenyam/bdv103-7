@@ -1,5 +1,10 @@
 services:
   nginx:
+    depends_on:
+      - books
+      - orders
+      - warehouse
+      - front-end
     image: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
@@ -11,26 +16,62 @@ services:
     volumes:
       - ./adapter:/source/adapter
       
-  server:
+  books:
+    depends_on:
+      - mongo-books
+      - rabbitmq
     image: node:20
     volumes:
-      - ./:/app
+      - ./books:/app
+      - ./node_modules:/app/node_modules
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./documented_types.ts:/documented_types.ts
     command: npx -y tsx ./index.ts
     working_dir: /app
 
-  server2:
+  orders:
+    depends_on:
+      - mongo-order
+      - rabbitmq
     image: node:20
     volumes:
-      - ./:/app
+      - ./orders:/app
+      - ./node_modules:/app/node_modules
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./documented_types.ts:/documented_types.ts
     command: npx -y tsx ./index.ts
     working_dir: /app
     
-  server3:
+  warehouse:
+    depends_on:
+      - mongo-warehouse
+      - rabbitmq
     image: node:20
     volumes:
-      - ./:/app
+      - ./warehouse:/app
+      - ./node_modules:/app/node_modules
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./documented_types.ts:/documented_types.ts
     command: npx -y tsx ./index.ts
     working_dir: /app
 
-  mongo:
+  docs:
+    image: node:20
+    volumes:
+      - ./docs:/app
+      - ./node_modules:/app/node_modules
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./build/swagger.json:/app/swagger.json
+    command: npx -y tsx ./index.ts
+    working_dir: /app
+    
+
+  mongo-books:
     image: mongo:latest
+  mongo-warehouse:
+    image: mongo:latest
+  mongo-order:
+    image: mongo:latest
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
